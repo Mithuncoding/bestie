@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Will you be my bestie? 💖</title>
+
+<style>
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(-45deg, #ffdde1, #c8e7ff, #ffd6ff, #d0f4ff);
+    background-size: 400% 400%;
+    animation: gradientBG 10s ease infinite;
+    overflow: hidden;
+  }
+
+  @keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  .container {
+    text-align: center;
+    padding: 20px;
+    max-width: 90%;
+  }
+
+  h1 {
+    font-size: 2.2rem;
+    color: #333;
+    margin-bottom: 20px;
+  }
+
+  .gif {
+    width: 180px;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 20px;
+    margin-bottom: 20px;
+  }
+
+  .buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  button {
+    padding: 12px 20px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: bold;
+    max-width: 200px;
+    word-wrap: break-word;
+    white-space: normal;
+  }
+
+  /* 🔥 BEST GREEN (vibrant + attractive) */
+  #yesBtn {
+    background: linear-gradient(45deg, #00c853, #69f0ae);
+    color: white;
+    box-shadow: 0 5px 15px rgba(0, 200, 83, 0.4);
+  }
+
+  /* 🔥 BEST RED (attention grabbing but smooth) */
+  #noBtn {
+    background: linear-gradient(45deg, #ff1744, #ff616f);
+    color: white;
+    position: relative;
+  }
+
+  button:hover {
+    transform: scale(1.1);
+  }
+
+  .heart {
+    position: absolute;
+    font-size: 20px;
+    animation: float 3s linear infinite;
+  }
+
+  @keyframes float {
+    0% { transform: translateY(0); opacity: 1; }
+    100% { transform: translateY(-100vh); opacity: 0; }
+  }
+
+  .footer {
+    position: absolute;
+    bottom: 10px;
+    font-size: 0.9rem;
+    color: #555;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <img id="gif" class="gif" src="https://media.giphy.com/media/3oriO0OEd9QIDdllqo/giphy.gif" alt="cute" />
+
+  <h1 id="question">Will you be my bestie? 💖</h1>
+
+  <div class="buttons">
+    <button id="yesBtn">Yes 💖</button>
+    <button id="noBtn">No 😶</button>
+  </div>
+</div>
+
+<div class="footer">Built by Mithun 💻✨</div>
+
+<script>
+  const yesBtn = document.getElementById("yesBtn");
+  const noBtn = document.getElementById("noBtn");
+  const question = document.getElementById("question");
+  const gif = document.getElementById("gif");
+
+  let clickCount = 0;
+  let yesScale = 1;
+  let escapeMode = false;
+
+  const lines = [
+    "You'll miss me 😌",
+    "Life is boring without me 👀",
+    "You know I'm fun right 😏",
+    "Don't do this mistake 😭",
+    "You'll regret saying no 😤",
+    "I'm kinda unforgettable 😎"
+  ];
+
+  const gifs = [
+    "https://media.giphy.com/media/3oriO0OEd9QIDdllqo/giphy.gif",
+    "https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif",
+    "https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif",
+    "https://media.giphy.com/media/26BRuo6sLetdllPAQ/giphy.gif",
+    "https://media.giphy.com/media/3oriO6qJiXajN0TyDu/giphy.gif",
+    "https://media.giphy.com/media/ICOgUNjpvO0PC/giphy.gif"
+  ];
+
+  yesBtn.onclick = () => {
+    question.innerText = "Yayyy! Best decision ever 😄💖";
+    createHearts();
+  };
+
+  noBtn.onclick = () => {
+    if (escapeMode) return;
+
+    clickCount++;
+    gif.src = gifs[clickCount % gifs.length];
+
+    if (clickCount === 1) {
+      noBtn.innerText = "Are you sure?";
+    } else if (clickCount <= 6) {
+      noBtn.innerText = lines[clickCount - 2];
+    }
+
+    yesScale += 0.25;
+    yesBtn.style.transform = `scale(${yesScale})`;
+
+    if (clickCount > 6) {
+      escapeMode = true;
+      noBtn.innerText = "No 😤";
+      noBtn.style.position = "absolute";
+    }
+  };
+
+  document.addEventListener("mousemove", (e) => {
+    if (!escapeMode) return;
+
+    const rect = noBtn.getBoundingClientRect();
+    const btnCenterX = rect.left + rect.width / 2;
+    const btnCenterY = rect.top + rect.height / 2;
+
+    const dx = e.clientX - btnCenterX;
+    const dy = e.clientY - btnCenterY;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+
+    if (distance < 120) {
+      const newX = Math.random() * (window.innerWidth - rect.width);
+      const newY = Math.random() * (window.innerHeight - rect.height);
+
+      noBtn.style.left = newX + "px";
+      noBtn.style.top = newY + "px";
+    }
+  });
+
+  function createHearts() {
+    for (let i = 0; i < 40; i++) {
+      const heart = document.createElement("div");
+      heart.className = "heart";
+      heart.innerText = "💖";
+      heart.style.left = Math.random() * 100 + "vw";
+      heart.style.animationDuration = (Math.random() * 2 + 2) + "s";
+      document.body.appendChild(heart);
+
+      setTimeout(() => heart.remove(), 3000);
+    }
+  }
+</script>
+
+</body>
+</html>
